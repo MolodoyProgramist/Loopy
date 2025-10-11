@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Регистрация в Loopy</h2>
+
+    {% if form.errors %}
+      <div class="errors">
+        {% for field, errors in form.errors.items %}
+          {% for error in errors %}
+            <p>{{ field }} — {{ error }}</p>
+          {% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Создать аккаунт</button>
+    </form>
+
+    <div class="links">
+      <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+    </div>
+</div>
+{% endblock %}
