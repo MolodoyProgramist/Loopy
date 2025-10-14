@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'ChatifyApp'
 ]
 
+RECAPTCHA_PUBLIC_KEY = '6LdGheorAAAAAJ2huv6dsAz3SDr6lF_p7p_smhcG'
+RECAPTCHA_PRIVATE_KEY = '6LdGheorAAAAAG5ywCnZHRNupYTI0xRun6Nji60y'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

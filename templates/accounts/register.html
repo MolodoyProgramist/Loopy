@@ -1,27 +1,38 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h2>Регистрация в Loopy</h2>
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 
-    {% if form.errors %}
-      <div class="errors">
-        {% for field, errors in form.errors.items %}
-          {% for error in errors %}
-            <p>{{ field }} — {{ error }}</p>
-          {% endfor %}
-        {% endfor %}
-      </div>
-    {% endif %}
+<div class="login-container">
+    <div class="login-card">
+        <h2 class="login-title">Регистрация в Loopy</h2>
 
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Создать аккаунт</button>
-    </form>
+        {% if form.errors %}
+        <div class="messages">
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    <p class="message">{{ field|capfirst }} — {{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
 
-    <div class="links">
-      <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            {# Если используешь django-simple-captcha или recaptcha #}
+            {% if form.captcha %}
+                {{ form.captcha }}
+            {% endif %}
+
+            <button type="submit" class="login-btn">Создать аккаунт</button>
+        </form>
+
+        <div class="login-links">
+            <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+        </div>
     </div>
 </div>
 {% endblock %}

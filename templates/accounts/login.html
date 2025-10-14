@@ -1,25 +1,30 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h2>Вход в Loopy</h2>
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
 
-    {% if messages %}
-      <div class="messages">
-        {% for message in messages %}
-          <p>{{ message }}</p>
-        {% endfor %}
-      </div>
-    {% endif %}
+<div class="login-container">
+    <div class="login-card">
+        <h2 class="login-title">Вход в Loopy</h2>
 
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Войти</button>
-    </form>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p class="message">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-    <div class="links">
-      <p>Нет аккаунта? <a href="{% url 'register' %}">Создать</a></p>
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="login-btn">Войти</button>
+        </form>
+
+        <div class="login-links">
+            <p>Нет аккаунта? <a href="{% url 'register' %}">Создать</a></p>
+        </div>
     </div>
 </div>
 {% endblock %}

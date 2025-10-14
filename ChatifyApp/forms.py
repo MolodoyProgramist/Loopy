@@ -28,6 +28,7 @@ class UserRegistrationForm(forms.ModelForm):
     password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput)
     birth_date = forms.DateField(label='Дата народження', widget=DateInput(attrs={'type': 'date'}))
 
+
     class Meta:
         model = User
         fields = ('username', 'email')

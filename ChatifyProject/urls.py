@@ -15,16 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.shortcuts import redirect
 from django.urls import include, path
 from auth_system.views import login_view, register_view, logout_view
 from ChatifyApp.views import profile_view, main_view, search_view
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("auth_system.urls")),
-    path('profile/<int:user_id>/', profile_view, name='profile'),
-    path('search/', search_view, name='search'),
-    path('main/', main_view, name='main')
+    path('', include("ChatifyApp.urls")),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

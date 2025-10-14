@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<div class="profile-container">
+
+    <!-- Левая панель -->
+    <div class="sidebar-left">
+        <a href="/" class="menu-btn">🏠 Главная</a>
+        <a href="/friends/" class="menu-btn">👥 Друзья</a>
+        <a href="/requests/" class="menu-btn">📨 Заявки</a>
+        <a href="/achievements/" class="menu-btn">🏆 Достижения</a>
+        <a href="/settings/" class="menu-btn">⚙️ Настройки</a>
+        <hr>
+        <button class="create-group-btn">➕ Создать группу</button>
+        <p class="no-groups-text">У вас нет групп</p>
+    </div>
+
+    <!-- Центр -->
+    <div class="profile-main">
+        <div class="profile-header">
+            <!-- Аватар -->
+            <div class="avatar-container">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" alt="avatar" class="avatar">
+                {% else %}
+                    <div class="avatar-default" style="background-color: {{ user.profile.color|default:'#6c63ff' }}">
+                        {{ user.username|first|upper }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Информация -->
+            <div class="profile-info">
+                <h2>{{ user.username }}</h2>
+                <div class="stats">
+                    <div>
+                        <strong>{{ posts|length|default:0 }}</strong>
+                        <span>посты</span>
+                    </div>
+                    <div>
+                        <strong>{{ user.profile.followers.count|default:0 }}</strong>
+                        <span>подписчики</span>
+                    </div>
+                    <div>
+                        <strong>{{ user.profile.following.count|default:0 }}</strong>
+                        <span>подписки</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Посты -->
+        <div class="posts-grid">
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="post-card">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="post" class="post-img">
+                        {% else %}
+                            <div class="post-placeholder">Нет изображения</div>
+                        {% endif %}
+
+                        <div class="post-content">
+                            <h4 class="post-title">{{ post.title }}</h4>
+                            <p class="post-desc">{{ post.content|default:"(нет описания)" }}</p>
+                            <p class="post-date">📅 {{ post.created_at|date:"d.m.Y H:i" }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-posts">У пользователя пока нет постов.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Правая панель -->
+    <div class="sidebar-right">
+        <h3>💬 Мессенджер</h3>
+        <div class="messenger-placeholder">
+            <p>Сообщений пока нет</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
