@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<div class="add-post-wrapper">
+    <div class="add-post-box">
+        <h1 class="add-post-title">📝 Создать пост</h1>
+        <p class="add-post-subtitle">Поделись своими мыслями или моментом ✨</p>
+        <hr>
+
+        <form method="post" enctype="multipart/form-data" class="add-post-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div style="color:red; margin-bottom:15px;">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <div class="form-field">
+                <label for="id_title">Заголовок</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <div style="color:red;">{{ form.title.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-field">
+                <label for="id_content">Описание</label>
+                {{ form.content }}
+                {% if form.content.errors %}
+                    <div style="color:red;">{{ form.content.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-field">
+                <label for="id_photos">Изображение</label>
+                {{ form.photos }}
+                {% if form.photos.errors %}
+                    <div style="color:red;">{{ form.photos.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-publish">📤 Опубликовать</button>
+        </form>
+    </div>
+</div>
+
+<style>
+/* Твой CSS без изменений */
+.add-post-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #f3f6ff 0%, #e9edff 100%);
+    padding: 20px;
+}
+.add-post-box {
+    width: 520px;
+    background: #fff;
+    padding: 40px 45px;
+    border-radius: 18px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+    font-family: 'Inter', sans-serif;
+    animation: fadeIn 0.5s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.add-post-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.add-post-title { font-size: 2rem; font-weight: 800; color: #1c1c1c; text-align: center; margin-bottom: 8px; }
+.add-post-subtitle { text-align: center; color: #6c757d; font-weight: 500; margin-bottom: 25px; }
+.add-post-form { display: flex; flex-direction: column; gap: 20px; }
+.form-field { display: flex; flex-direction: column; gap: 8px; }
+.form-field label { font-weight: 600; font-size: 15px; color: #333; }
+.add-post-form input[type="text"],
+.add-post-form textarea,
+.add-post-form input[type="file"] {
+    border: 1.5px solid #dcdce6;
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-size: 15px;
+    background: #fafaff;
+    transition: 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+}
+.add-post-form input[type="text"]:focus,
+.add-post-form textarea:focus {
+    border-color: #6c63ff;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+}
+.add-post-form textarea { resize: vertical; min-height: 120px; }
+.add-post-form input[type="file"] {
+    padding: 8px;
+    cursor: pointer;
+    background: #f8f8ff;
+    border-radius: 12px;
+}
+.add-post-form input[type="file"]::-webkit-file-upload-button {
+    background: #6c63ff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+.add-post-form input[type="file"]::-webkit-file-upload-button:hover {
+    background: #5a52e0;
+}
+.btn-publish {
+    margin-top: 10px;
+    background: linear-gradient(90deg, #6c63ff, #5a52e0);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.25s ease, transform 0.25s ease;
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.2);
+}
+.btn-publish:hover {
+    background: linear-gradient(90deg, #5a52e0, #4a41c0);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.3);
+}
+</style>
+
+{% endblock %}
