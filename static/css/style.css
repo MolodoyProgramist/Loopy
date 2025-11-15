@@ -55,7 +55,7 @@ body {
 }
 
 .login-form input:focus {
-    border-color: #4a76a8;
+    border-color: #af0eb2;
     box-shadow: 0 0 0 3px rgba(74,118,168,0.1);
 }
 
@@ -64,7 +64,7 @@ body {
     padding: 12px;
     border: none;
     border-radius: 8px;
-    background: #4a76a8;
+    background: #930a95;
     color: #fff;
     font-weight: 600;
     cursor: pointer;
@@ -73,7 +73,7 @@ body {
 }
 
 .login-btn:hover {
-    background: #3b5f8a;
+    background: #990b81;
 }
 
 .login-links {
@@ -83,7 +83,7 @@ body {
 }
 
 .login-links a {
-    color: #4a76a8;
+    color: #881688;
     text-decoration: none;
     font-weight: 500;
 }
@@ -159,7 +159,7 @@ body {
 }
 
 .register-form input:focus {
-    border-color: #2563eb;
+    border-color: #7d1065;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
@@ -168,7 +168,7 @@ body {
     padding: 14px;
     border: none;
     border-radius: 10px;
-    background-color: #2563eb;
+    background-color: #7b0b5f;
     color: #fff;
     font-weight: 600;
     cursor: pointer;
@@ -176,7 +176,7 @@ body {
 }
 
 .register-btn:hover {
-    background-color: #1e40af;
+    background-color: #700a68;
 }
 
 /* --- Ссылки под формой --- */
@@ -186,7 +186,7 @@ body {
 }
 
 .register-links a {
-    color: #2563eb;
+    color: #7d0e6e;
     text-decoration: none;
     font-weight: 500;
 }
@@ -201,6 +201,5 @@ body {
     display: flex;
     justify-content: center;
 }
-
 
 

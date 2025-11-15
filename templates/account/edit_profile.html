@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background: #f2f3f7;
+    font-family: "Inter", sans-serif;
+    color: #222;
+    margin: 0;
+    padding: 0;
+  }
+
+  .edit-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .edit-container h1 {
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 30px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  textarea:focus,
+  select:focus {
+    border-color: #6c63ff;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .avatar-preview {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+
+  .avatar-preview img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6c63ff;
+  }
+
+  .avatar-preview .fallback {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #6c63ff;
+    color: #fff;
+    font-size: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  input[type="file"] {
+    border: none;
+    font-size: 14px;
+  }
+
+  .btn-save {
+    background: #6c63ff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-save:hover {
+    background: #5952d4;
+  }
+
+  .btn-cancel {
+    background: #f1f1f1;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-cancel:hover {
+    background: #e2e2e2;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  @media (max-width: 600px) {
+    .edit-container {
+      margin: 0;
+      border-radius: 0;
+      box-shadow: none;
+      padding: 20px;
+    }
+
+    .edit-container h1 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+  }
+</style>
+
+<div class="edit-container">
+  <h1>Редактировать профиль</h1>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- АВАТАР -->
+    <div class="avatar-preview">
+      {% if user.avatar %}
+        <img src="{{ user.avatar.url }}" alt="Avatar">
+      {% else %}
+        <div class="fallback">{{ user.username|first|upper }}</div>
+      {% endif %}
+    </div>
+    <label for="avatar">Аватарка</label>
+    <input type="file" id="avatar" name="avatar">
+
+    <!-- ИМЯ -->
+    <label for="username">Имя пользователя</label>
+    <input type="text" id="username" name="username" value="{{ user.username }}" required>
+
+    <!-- EMAIL -->
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+    <!-- BIO -->
+    <label for="bio">Описание профиля</label>
+    <textarea id="bio" name="bio" placeholder="Расскажите немного о себе...">{{ user.bio }}</textarea>
+
+    <div class="btn-group">
+      <button type="submit" class="btn-save">Сохранить</button>
+      <a href="{% url 'profile' user.id %}" class="btn-cancel">Отмена</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

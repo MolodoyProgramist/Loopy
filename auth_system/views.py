@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.forms import authenticate, logger
 from django.contrib import messages
-from ChatifyApp.forms import UserRegistrationForm, UserLoginForm
+from LooplyApp.forms import UserRegistrationForm, UserLoginForm
 
 def register_view(request):
     if request.method == 'POST':
@@ -36,8 +36,7 @@ def login_view(request):
 # Create your views here.
 def logout_view(request):
     logout(request)
-    return redirect('accounts/login.html')  # или куда хочеш перенаправити
+    return redirect('login')  # или куда хочеш перенаправити
 # Create your views here.
-
 
 # Create your views here.
