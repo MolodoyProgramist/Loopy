@@ -1,14 +1,60 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from .forms import CommentForm, PostForm, UserFrom
-from .models import User, Groups, Post, FriendRequest, Message, Notification, Rating,Chat, Comment
+from .models import User, Groups, Post, FriendRequest, Message, Notification, Rating,Chat, Comment, Follow
 from django.contrib.auth.decorators import login_required
 from auth_system.views import logout
 
-def profile_view(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    posts = user.posts.all()
-    return render(request, 'account/profile.html', {'user': user, 'posts': posts})
 
+def profile_view(request, user_id):
+    profile_user = get_object_or_404(User, id=user_id)
+    posts = Post.objects.filter(author=profile_user)
+
+    # Проверяем, подписан ли текущий пользователь
+    is_following = False
+    if request.user.is_authenticated:
+        is_following = Follow.objects.filter(follower=request.user, following=profile_user).exists()
+
+    context = {
+        'profile_user': profile_user,
+        'posts': posts,
+        'is_following': is_following,
+    }
+    return render(request, 'account/profile.html', context)
+
+def profile_userView(request, user_id):
+    profile_user = get_object_or_404(User, id=user_id)
+    posts = Post.objects.filter(author=profile_user)
+
+    # Проверяем, подписан ли текущий пользователь
+    is_following = False
+    if request.user.is_authenticated:
+        is_following = Follow.objects.filter(follower=request.user, following=profile_user).exists()
+
+    context = {
+        'profile_user': profile_user,
+        'posts': posts,
+        'is_following': is_following,
+    }
+    return render(request, 'account/profile_user.html', context)
+
+
+@login_required
+def follow_user(request, user_id):
+    target = get_object_or_404(User, id=user_id)
+
+    if target != request.user:
+        Follow.objects.get_or_create(follower=request.user, following=target)
+
+    return redirect('profile_user', user_id=user_id)
+
+
+@login_required
+def unfollow_user(request, user_id):
+    target = get_object_or_404(User, id=user_id)
+
+    Follow.objects.filter(follower=request.user, following=target).delete()
+
+    return redirect('profile_user', user_id=user_id)
 
 @login_required
 def edit_profile(request):

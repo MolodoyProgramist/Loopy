@@ -3,26 +3,38 @@
 
 {% block content %}
 <style>
+/* ------------------------------------------- */
+/* ОСНОВНОЙ МАКЕТ И ТЕЛО (BODY) */
+/* ------------------------------------------- */
+/* body без display: flex, чтобы фиксированный сайдбар работал корректно */
 body {
     background: #f2f3f7;
     font-family: "Inter", sans-serif;
     color: #222;
     margin: 0;
-    display: flex;
 }
 
-/* Навбар слева */
+/* ------------------------------------------- */
+/* БОКОВАЯ ПАНЕЛЬ (SIDEBAR) - ФИКСИРОВАННАЯ */
+/* ------------------------------------------- */
 .sidebar {
     width: 220px;
     background: #fff;
+    
+    /* КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Фиксируем положение */
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0; 
+    
     height: 100vh;
     padding: 20px;
+    /* Важно для точного расчета ширины: 220px */
+    box-sizing: border-box; 
+    
     box-shadow: 2px 0 10px rgba(0,0,0,0.05);
     display: flex;
-    margin-right: 1119px;
-    margin-top: -220px;
     flex-direction: column;
-    position: fixed;
 }
 
 .sidebar h2 {
@@ -44,15 +56,25 @@ body {
     background: #f2f3f7;
 }
 
-/* Основной контент */
+/* ------------------------------------------- */
+/* ОСНОВНОЙ КОНТЕНТ (MAIN-CONTAINER) */
+/* ------------------------------------------- */
 .main-container {
     max-width: 1000px;
-    margin: 30px auto;
+    
+    /* КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: Отступ для обхода фиксированного сайдбара */
+    /* Ширина сайдбара (220) + паддинги (2x20) + отступ справа от сайдбара (20) = 280px */
+    margin-left: 280px; 
+    margin-right: auto; /* Центрирует контент в оставшемся пространстве */
+    margin-top: 30px; 
+    margin-bottom: 30px;
+    
     padding: 20px;
-    margin-left: 240px; /* отступ для боковой панели */
-    flex: 1;
 }
 
+/* ------------------------------------------- */
+/* СТИЛИ ПОСТОВ (POST CARD) */
+/* ------------------------------------------- */
 .post-card {
     border-radius: 12px;
     overflow: hidden;
@@ -62,8 +84,6 @@ body {
     text-decoration: none;
     color: inherit;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
 }
 
 .post-card:hover {
@@ -112,12 +132,6 @@ body {
     object-fit: cover;
 }
 
-.post-menu {
-    font-size: 20px;
-    cursor: pointer;
-    color: #888;
-}
-
 .no-posts {
     text-align: center;
     color: #666;
@@ -126,7 +140,6 @@ body {
 }
 </style>
 
-<!-- Боковая панель -->
 <div class="sidebar">
     <h2>Меню</h2>
     <a href="{% url 'main' %}">Главная</a>
@@ -135,15 +148,18 @@ body {
     <a href="#">Настройки</a>
 </div>
 
-<!-- Основной контент -->
 <div class="main-container">
     <h1>Лента новостей</h1>
 
     {% if posts %}
         {% for post in posts %}
-            <a href="{% url 'post_detail' post.id %}" class="post-card">
+
+            <div class="post-card">
+
                 <div class="post-header">
-                    <div class="post-author">
+                    <a href="{% url 'profile_user' post.author.id %}" 
+                        style="text-decoration:none; color:inherit; display:flex; align-items:center; gap:10px;">
+
                         {% if post.author.profile.avatar %}
                             <img src="{{ post.author.profile.avatar.url }}" alt="Аватар" class="avatar">
                         {% else %}
@@ -151,21 +167,28 @@ body {
                                 {{ post.author.username|slice:":1"|upper }}
                             </div>
                         {% endif %}
+
                         <span>{{ post.author.username }} • {{ post.created_at|date:"d.m.Y H:i" }}</span>
-                    </div>
-                    <div class="post-menu">⋮</div>
+
+                    </a>
                 </div>
 
-                {% if post.image %}
-                    <img src="{{ post.image.url }}" class="post-image">
-                {% else %}
-                    <div class="post-image" style="background:#e5e5e5;display:flex;align-items:center;justify-content:center;color:#777;">
-                        Нет изображения
-                    </div>
-                {% endif %}
+                <a href="{% url 'post_detail' post.id %}" style="text-decoration:none; color:inherit;">
 
-                <div class="post-title">{{ post.title }}</div>
-            </a>
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" class="post-image">
+                    {% else %}
+                        <div class="post-image" style="background:#e5e5e5;display:flex;align-items:center;justify-content:center;color:#777;">
+                            Нет изображения
+                        </div>
+                    {% endif %}
+
+                    <div class="post-title">{{ post.title }}</div>
+
+                </a>
+
+            </div>
+
         {% endfor %}
     {% else %}
         <p class="no-posts">Пока нет постов 😔</p>

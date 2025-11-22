@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  body {
+    background: #f2f3f7;
+    font-family: "Inter", sans-serif;
+    color: #222;
+    margin: 0;
+  }
+
+  .profile-container {
+    max-width: 900px;
+    margin: 50px auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    position: relative;
+  }
+
+  .menu-dots {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: 0.2s;
+  }
+
+  .menu-dots:hover {
+    background: #f1f1f1;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 55px;
+    right: 20px;
+    width: 170px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    padding: 10px 0;
+    display: none;
+    animation: fadeIn 0.2s ease;
+    z-index: 2000;
+  }
+
+  .dropdown-menu a {
+    display: block;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: 0.2s;
+  }
+
+  .dropdown-menu a:hover {
+    background: #f4f4f4;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .profile-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .avatar-section {
+    text-align: center;
+    width: 160px;
+  }
+
+  .profile-avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6c63ff;
+    margin-bottom: 15px;
+  }
+
+  .profile-avatar.fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6c63ff;
+    color: #fff;
+    font-size: 50px;
+    font-weight: bold;
+  }
+
+  .profile-bio {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+
+  .profile-bio-empty {
+    font-size: 13px;
+    color: #aaa;
+    font-style: italic;
+    margin-top: 6px;
+  }
+
+  .profile-info {
+    flex-grow: 1;
+  }
+
+  .username {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+  }
+
+  .stats {
+    display: flex;
+    gap: 35px;
+    margin-top: 10px;
+  }
+
+  .stats div {
+    text-align: center;
+  }
+
+  .stats strong {
+    display: block;
+    font-size: 18px;
+    color: #222;
+  }
+
+  .stats span {
+    font-size: 13px;
+    color: #777;
+  }
+
+  .profile-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .profile-actions button,
+  .profile-actions a {
+    flex: none;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-edit {
+    background: #6c63ff;
+    color: #fff;
+  }
+
+  .btn-edit:hover {
+    background: #5952d4;
+  }
+
+  .btn-share {
+    background: #f1f1f1;
+    color: #333;
+  }
+
+  .btn-share:hover {
+    background: #e2e2e2;
+  }
+
+  .btn-add {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #6c63ff;
+    color: #fff;
+    font-size: 28px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    z-index: 1000;
+  }
+
+  .btn-add:hover {
+    background: #5952d4;
+    transform: scale(1.05);
+  }
+
+  .divider {
+    margin: 10px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .post-card {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+
+  .post-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .no-image {
+    width: 100%;
+    height: 200px;
+    background: #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 14px;
+  }
+
+  .post-overlay {
+    padding: 12px 16px;
+  }
+
+  .post-overlay h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .post-overlay p {
+    margin: 0;
+    font-size: 13px;
+    color: #888;
+  }
+
+  .no-posts {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+    margin-top: 40px;
+  }
+</style>
+
+<div class="profile-container">
+
+  <div class="menu-dots" onclick="toggleMenu()">⋮</div>
+
+  <div id="dropdownMenu" class="dropdown-menu">
+    <a href="{% url 'main' %}">🏠 Главная</a>
+    <a href="#">⚙️ Настройки</a>
+    <a href="{% url 'logout' %}">🚪 Выйти</a>
+  </div>
+
+  <div class="profile-header">
+    
+    <div class="avatar-section">
+      {% if profile_user.profile.avatar %}
+        <img src="{{ profile_user.profile.avatar.url }}" class="profile-avatar">
+      {% else %}
+        <div class="profile-avatar fallback" style="background: {{ profile_user.profile.color|default:'#6c63ff' }}">
+          {{ profile_user.username|first|upper }}
+        </div>
+      {% endif %}
+
+      {% if profile_user.bio %}
+        <p class="profile-bio">{{ profile_user.bio }}</p>
+      {% else %}
+        <p class="profile-bio-empty">Добавьте описание профиля</p>
+      {% endif %}
+    </div>
+
+    <div class="profile-info">
+      <h1 class="username">{{ profile_user.username }}</h1>
+
+      <div class="stats">
+        <div><strong>{{ posts|length|default:0 }}</strong><span>постов</span></div>
+        <div><strong>{{ profile_user.followers.count }}</strong><span>подписчиков</span></div>
+        <div><strong>{{ profile_user.following.count }}</strong><span>подписок</span></div>
+      </div>
+
+      <div class="profile-actions">
+        {% if request.user != profile_user %}
+            {% if is_following %}
+                <a href="{% url 'unfollow_user' profile_user.id %}" class="btn-edit">Отписаться</a>
+            {% else %}
+                <a href="{% url 'follow_user' profile_user.id %}" class="btn-edit">Подписаться</a>
+            {% endif %}
+        {% endif %}
+        <button class="btn-share">Сообщение</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="posts-section">
+    {% if posts %}
+      <div class="posts-grid">
+        {% for post in posts %}
+          <a href="{% url 'post_detail' post.id %}" class="post-card">
+            {% if post.image %}
+              <img src="{{ post.image.url }}" class="post-image">
+            {% else %}
+              <div class="no-image">Нет изображения</div>
+            {% endif %}
+            <div class="post-overlay">
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.created_at|date:"d.m.Y H:i" }}</p>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-posts">Пока нет постов 😔</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+function toggleMenu() {
+  let menu = document.getElementById("dropdownMenu");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+
+document.addEventListener("click", function(e) {
+  let menu = document.getElementById("dropdownMenu");
+  let dots = document.querySelector(".menu-dots");
+  if (!menu.contains(e.target) && !dots.contains(e.target)) {
+    menu.style.display = "none";
+  }
+});
+</script>
+
+{% endblock %}
